@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  mysql_db:
+    image: "mysql:8.0"
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: assignment
+      MYSQL_ROOT_PASSWORD: bollywood
+    volumes:
+      - ./src/main/resources/scripts:/docker-entrypoint-initdb.d
+    networks:
+      - common-network
+
+  api_service:
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql_db
+    networks:
+      - common-network
+networks:
+  common-network:
+    driver: bridge
